@@ -1,0 +1,13 @@
+apply plugin: "application"
+
+application {
+    mainClass = 'nl.bertriksikken.browanlogger.BrowanLogger'
+}
+
+dependencies {
+    implementation libs.reload4j
+
+    implementation libs.bundles.retrofit
+    implementation libs.bundles.jackson
+}
+

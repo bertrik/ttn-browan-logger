@@ -1,0 +1,4 @@
+include 'ttn-browan-logger'
+
+rootProject.name = 'ttn-browan-logger'
+
