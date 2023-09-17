@@ -1,0 +1,7 @@
+---
+ttn:
+  mqtt_url: "tcp://eu1.cloud.thethings.network"
+  identity_server_url: "https://eu1.cloud.thethings.network"
+  identity_server_timeout: 20
+  name: "hetnatuurhistorischsensors"
+  key: "NNSXS.UGRPVV5GCUKCTVBQKX3N4IA3IIGXTZG7KVQU6JI.secret"

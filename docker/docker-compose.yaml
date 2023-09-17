@@ -1,0 +1,11 @@
+version: "3"
+services:
+  java:
+    image: ghcr.io/bertrik/ttn-browan-logger
+    build: ..
+    restart: always
+    volumes:
+      - "./ttn-browan-logger.yaml:/opt/ttn-browan-logger/ttn-browan-logger.yaml:ro"
+      - "./log4j.properties:/opt/ttn-browan-logger/log4j.properties:ro"
+      - "./log:/opt/ttn-browan-logger/log:rw"
+
