@@ -2,38 +2,58 @@ package nl.bertriksikken.browanlogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import nl.bertriksikken.browan.BrowanMessage;
+import nl.bertriksikken.ttn.LoraWanUplink;
+import nl.bertriksikken.ttn.MqttListener;
+
 public final class BrowanLogger {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowanLogger.class);
-    private static final String CONFIG_FILE = "browanlogger.yaml";
+    private static final String CONFIG_FILE = "ttn-browan-logger.yaml";
 
-    public static void main(String[] args) throws IOException {
+    private BrowanLoggerConfig config;
+    private final MqttListener mqttListener;
+
+    public static void main(String[] args) throws IOException, MqttException {
         PropertyConfigurator.configure("log4j.properties");
-
         BrowanLoggerConfig config = readConfig(new File(CONFIG_FILE));
         BrowanLogger app = new BrowanLogger(config);
         app.start();
         Runtime.getRuntime().addShutdownHook(new Thread(app::stop));
     }
 
-    private void start() {
-        // TODO
+    BrowanLogger(BrowanLoggerConfig config) {
+        this.config = Objects.requireNonNull(config);
+        this.mqttListener = new MqttListener(config.ttnConfig.getMqttUrl());
+    }
+
+    private void start() throws MqttException {
+        mqttListener.subscribe(config.ttnConfig.getName(), config.ttnConfig.getKey(), this::messageReceived);
     }
 
     private void stop() {
-        // TODO
+        mqttListener.stop();
+        LOG.info("Application stopped");
     }
 
-    BrowanLogger(BrowanLoggerConfig config) {
-        // TODO
+    // package-private for testing
+    void messageReceived(LoraWanUplink uplink) {
+        LOG.info("Received uplink: {}", uplink);
+        BrowanMessage message = new BrowanMessage(uplink.getTime(), uplink.getDeviceId(), uplink.getCounter(), "");
+        message.setRadio(uplink.getSF(), uplink.getSNR(), uplink.getRSSI());
+        if (message.parsePayload(uplink.getPort(), uplink.getFrmPayload())) {
+            LOG.info("Parsed message: {}", message);
+        }
     }
 
     private static BrowanLoggerConfig readConfig(File file) throws IOException {

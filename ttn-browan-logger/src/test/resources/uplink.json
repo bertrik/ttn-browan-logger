@@ -1,0 +1,96 @@
+{
+  "end_device_ids": {
+    "device_id": "eui-e8e1e10001084c94",
+    "application_ids": {
+      "application_id": "hetnatuurhistorischsensors"
+    },
+    "dev_eui": "E8E1E10001084C94",
+    "join_eui": "58A0CB0001500000",
+    "dev_addr": "260B5DE8"
+  },
+  "correlation_ids": [
+    "as:up:01HAG1G2X51SGKWQBT8SEFNQ4S",
+    "gs:conn:01HA23BRZ4YSYH3GFJDQ4EVJHG",
+    "gs:up:host:01HA23BRZJ5MMWJGGXWVSVNT62",
+    "gs:uplink:01HAG1G2PNHGQQSBVP1F3F4PPY",
+    "ns:uplink:01HAG1G2PN085WR1KERN2NBFRD",
+    "rpc:/ttn.lorawan.v3.GsNs/HandleUplink:01HAG1G2PNMWZ4JCEPBCJED933",
+    "rpc:/ttn.lorawan.v3.NsAs/HandleUplink:01HAG1G2X4GDQQVRGFYS7Y5V33"
+  ],
+  "received_at": "2023-09-16T22:24:05.028921939Z",
+  "uplink_message": {
+    "session_key_id": "AYjo3K8n6bydqAZ+i5IbwQ==",
+    "f_port": 103,
+    "f_cnt": 10678,
+    "frm_payload": "QQs2S0IDAQCeADU=",
+    "decoded_payload": {
+      "battery": 3.6,
+      "eco2": 834,
+      "humidity": 75,
+      "iaq": 158,
+      "iaqChanged": 0,
+      "status": 1,
+      "tempHumidChanged": 0,
+      "temperature": 21,
+      "temperatureBoard": 22,
+      "voc": 1
+    },
+    "rx_metadata": [
+      {
+        "gateway_ids": {
+          "gateway_id": "eui-a84041ffff1ee1e0",
+          "eui": "A84041FFFF1EE1E0"
+        },
+        "time": "2023-09-16T22:24:04.806875Z",
+        "timestamp": 954499948,
+        "rssi": -82,
+        "channel_rssi": -82,
+        "snr": 7.2,
+        "location": {
+          "latitude": 51.910803313006376,
+          "longitude": 4.472382100262511,
+          "altitude": 8,
+          "source": "SOURCE_REGISTRY"
+        },
+        "uplink_token": "CiIKIAoUZXVpLWE4NDA0MWZmZmYxZWUxZTASCKhAQf//HuHgEOyGkscDGgwIhNaYqAYQ+Zq/hwMg4LuF5eOLrAE=",
+        "channel_index": 5,
+        "received_at": "2023-09-16T22:24:04.807900544Z"
+      }
+    ],
+    "settings": {
+      "data_rate": {
+        "lora": {
+          "bandwidth": 125000,
+          "spreading_factor": 7,
+          "coding_rate": "4/5"
+        }
+      },
+      "frequency": "867500000",
+      "timestamp": 954499948,
+      "time": "2023-09-16T22:24:04.806875Z"
+    },
+    "received_at": "2023-09-16T22:24:04.821864074Z",
+    "consumed_airtime": "0.061696s",
+    "locations": {
+      "user": {
+        "latitude": 51.910833478059494,
+        "longitude": 4.472511112689973,
+        "altitude": -2,
+        "source": "SOURCE_REGISTRY"
+      }
+    },
+    "version_ids": {
+      "brand_id": "browan",
+      "model_id": "tbhv110",
+      "hardware_version": "1.0",
+      "firmware_version": "1.0.1",
+      "band_id": "EU_863_870"
+    },
+    "network_ids": {
+      "net_id": "000013",
+      "tenant_id": "ttn",
+      "cluster_id": "eu1",
+      "cluster_address": "eu1.cloud.thethings.network"
+    }
+  }
+}

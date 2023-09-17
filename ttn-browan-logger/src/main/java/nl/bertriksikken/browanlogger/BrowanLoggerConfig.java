@@ -9,5 +9,5 @@ import nl.bertriksikken.ttn.TtnConfig;
 @JsonAutoDetect(getterVisibility = Visibility.NONE)
 public final class BrowanLoggerConfig {
     @JsonProperty("ttn")
-    public TtnConfig ttnConfig;
+    public TtnConfig ttnConfig = new TtnConfig();
 }

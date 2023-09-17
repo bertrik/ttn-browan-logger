@@ -1,7 +1,12 @@
 package nl.bertriksikken.ttn;
 
+import java.time.Duration;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonAutoDetect(getterVisibility = Visibility.NONE)
 public final class TtnConfig {
 
     @JsonProperty("mqtt_url")
@@ -17,7 +22,7 @@ public final class TtnConfig {
     private String name = "hetnatuurhistorischsensors";
 
     @JsonProperty("key")
-    private String key = "NNSXS.xxx";
+    private String key = "secret";
 
     public String getMqttUrl() {
         return mqttUrl;
@@ -35,8 +40,8 @@ public final class TtnConfig {
         return identityServerUrl;
     }
 
-    public long getIdentityServerTimeout() {
-        return identityServerTimeout;
+    public Duration getIdentityServerTimeout() {
+        return Duration.ofSeconds(identityServerTimeout);
     }
 
 }

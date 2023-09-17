@@ -3,12 +3,16 @@ package nl.bertriksikken.browan;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.time.Instant;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Representation of a Browan message, as sent over LoRaWAN.
+ */
 public final class BrowanMessage {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowanMessage.class);
@@ -33,30 +37,35 @@ public final class BrowanMessage {
 
     // mandatory part
     private final Instant time;
-    private final int sequenceNumber;
     private final String deviceId;
+    private final int sequenceNumber;
     private final String deviceName;
 
     // measurements from payload
-    private final Map<EBrowanItem, Number> measurements = new HashMap<>();
+    private final Map<EBrowanItem, Number> items = new LinkedHashMap<>();
 
-    public BrowanMessage(Instant time, int sequenceNumber, String deviceId, String deviceName) {
+    public BrowanMessage(Instant time, String deviceId, int sequenceNumber, String deviceName) {
         this.time = time;
-        this.sequenceNumber = sequenceNumber;
         this.deviceId = deviceId;
+        this.sequenceNumber = sequenceNumber;
         this.deviceName = deviceName;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.ROOT, "{time=%s,id=%s,fcnt=%d,items=%s}", time, deviceId, sequenceNumber, items);
     }
 
     public Instant getTime() {
         return time;
     }
 
-    public int getSequenceNumber() {
-        return sequenceNumber;
-    }
-
     public String getDeviceId() {
         return deviceId;
+    }
+    
+    public int getSequenceNumber() {
+        return sequenceNumber;
     }
 
     public String getDeviceName() {
@@ -64,24 +73,21 @@ public final class BrowanMessage {
     }
 
     public void setRadio(int spreadingFactor, double snr, double rssi) {
-        measurements.put(EBrowanItem.RADIO_SF, spreadingFactor);
-        measurements.put(EBrowanItem.RADIO_SNR, snr);
-        measurements.put(EBrowanItem.RADIO_RSSI, rssi);
+        items.put(EBrowanItem.RADIO_SF, spreadingFactor);
+        items.put(EBrowanItem.RADIO_SNR, snr);
+        items.put(EBrowanItem.RADIO_RSSI, rssi);
     }
 
-    public void parsePayload(int port, byte[] data) {
+    public boolean parsePayload(int port, byte[] data) {
         switch (port) {
         case 102:
-            parseTbms100(data);
-            break;
+            return parseTbms100(data);
         case 103:
             switch (data.length) {
             case 8:
-                parseTbhh100(data);
-                break;
+                return parseTbhh100(data);
             case 11:
-                parseTbhv110(data);
-                break;
+                return parseTbhv110(data);
             default:
                 LOG.warn("Could not parse payload for port {} and payload length {}", port, data.length);
                 break;
@@ -91,22 +97,25 @@ public final class BrowanMessage {
             LOG.warn("Payload was not parsed, unhandled port {}", port);
             break;
         }
+        return false;
     }
 
-    private void parseTbhh100(byte[] data) {
+    private boolean parseTbhh100(byte[] data) {
         ByteBuffer bb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
         int status = parseStatus(bb.get());
         double battery = parseVoltage(bb.get());
         double temperature = parseTemperature(bb.get());
         double rh = parseHumidity(bb.get());
 
-        measurements.put(EBrowanItem.STATUS, status);
-        measurements.put(EBrowanItem.BATTERY, battery);
-        measurements.put(EBrowanItem.ENV_TEMP, temperature);
-        measurements.put(EBrowanItem.HUMIDITY, rh);
+        items.put(EBrowanItem.STATUS, status);
+        items.put(EBrowanItem.BATTERY, battery);
+        items.put(EBrowanItem.ENV_TEMP, temperature);
+        items.put(EBrowanItem.HUMIDITY, rh);
+
+        return true;
     }
 
-    private void parseTbhv110(byte[] data) {
+    private boolean parseTbhv110(byte[] data) {
         ByteBuffer bb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
         int status = parseStatus(bb.get());
         double battery = parseVoltage(bb.get());
@@ -117,20 +126,22 @@ public final class BrowanMessage {
         int iaq = bb.getShort() & 0xFFFF;
         double envTemp = parseTemperature(bb.get());
 
-        measurements.put(EBrowanItem.STATUS, status);
-        measurements.put(EBrowanItem.BATTERY, battery);
-        measurements.put(EBrowanItem.PCB_TEMP, pcbTemp);
-        measurements.put(EBrowanItem.HUMIDITY, rh);
-        measurements.put(EBrowanItem.ECO2, eco2);
-        measurements.put(EBrowanItem.VOC, voc);
-        measurements.put(EBrowanItem.IAQ, iaq);
-        measurements.put(EBrowanItem.ENV_TEMP, envTemp);
+        items.put(EBrowanItem.STATUS, status);
+        items.put(EBrowanItem.BATTERY, battery);
+        items.put(EBrowanItem.PCB_TEMP, pcbTemp);
+        items.put(EBrowanItem.HUMIDITY, rh);
+        items.put(EBrowanItem.ECO2, eco2);
+        items.put(EBrowanItem.VOC, voc);
+        items.put(EBrowanItem.IAQ, iaq);
+        items.put(EBrowanItem.ENV_TEMP, envTemp);
+
+        return true;
     }
 
-    private void parseTbms100(byte[] data) {
+    private boolean parseTbms100(byte[] data) {
         if (data.length < 8) {
             LOG.warn("Expected at least 8 bytes for TBMS");
-            return;
+            return false;
         }
         ByteBuffer bb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
         int status = parseStatus(bb.get());
@@ -140,17 +151,18 @@ public final class BrowanMessage {
         int count = bb.getShort() & 0xFFFF;
         count += (bb.get() & 0xFF) << 16;
 
-        measurements.put(EBrowanItem.STATUS, status);
-        measurements.put(EBrowanItem.BATTERY, battery);
-        measurements.put(EBrowanItem.PCB_TEMP, temp);
-        measurements.put(EBrowanItem.MOVE_TIME, time);
-        measurements.put(EBrowanItem.MOVE_COUNT, count);
+        items.put(EBrowanItem.STATUS, status);
+        items.put(EBrowanItem.BATTERY, battery);
+        items.put(EBrowanItem.PCB_TEMP, temp);
+        items.put(EBrowanItem.MOVE_TIME, time);
+        items.put(EBrowanItem.MOVE_COUNT, count);
+        return true;
     }
 
     private int parseStatus(byte b) {
         return b & 0xFF;
     }
-    
+
     private double parseVoltage(byte b) {
         return 2.5 + 0.1 * (b & 0x0F);
     }
@@ -164,7 +176,7 @@ public final class BrowanMessage {
     }
 
     public Number getItem(EBrowanItem item) {
-        return measurements.get(item);
+        return items.get(item);
     }
 
 }
