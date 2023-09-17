@@ -69,7 +69,7 @@ public final class BrowanMessageTest {
         Assert.assertEquals(1174, message.getItem(EBrowanItem.ECO2));
         Assert.assertEquals(2, message.getItem(EBrowanItem.VOC));
         Assert.assertEquals(236, message.getItem(EBrowanItem.IAQ));
-        Assert.assertEquals(21.0, message.getItem(EBrowanItem.ENV_TEMP).doubleValue(), 0.01);
+        Assert.assertEquals(21.0, message.getItem(EBrowanItem.TEMPERATURE).doubleValue(), 0.01);
     }
 
     @Test
@@ -80,7 +80,7 @@ public final class BrowanMessageTest {
 
         Assert.assertNotNull(message.getItem(EBrowanItem.STATUS));
         Assert.assertEquals(3.6, message.getItem(EBrowanItem.BATTERY).doubleValue(), 0.01);
-        Assert.assertEquals(26.0, message.getItem(EBrowanItem.ENV_TEMP).doubleValue(), 0.01);
+        Assert.assertEquals(26.0, message.getItem(EBrowanItem.TEMPERATURE).doubleValue(), 0.01);
         Assert.assertEquals(56, message.getItem(EBrowanItem.HUMIDITY).doubleValue(), 0.1);
     }
 
@@ -92,7 +92,7 @@ public final class BrowanMessageTest {
 
         Assert.assertNotNull(message.getItem(EBrowanItem.STATUS));
         Assert.assertEquals(3.6, message.getItem(EBrowanItem.BATTERY).doubleValue(), 0.01);
-        Assert.assertEquals(25.0, message.getItem(EBrowanItem.ENV_TEMP).doubleValue(), 0.01);
+        Assert.assertEquals(25.0, message.getItem(EBrowanItem.TEMPERATURE).doubleValue(), 0.01);
         Assert.assertEquals(58, message.getItem(EBrowanItem.HUMIDITY).doubleValue(), 0.1);
     }
 }

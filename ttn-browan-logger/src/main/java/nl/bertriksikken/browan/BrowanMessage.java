@@ -3,6 +3,7 @@ package nl.bertriksikken.browan;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,7 +27,7 @@ public final class BrowanMessage {
         ECO2, // CO2 equivalent, integer, in ppm
         VOC, // VOC estimate, integer, in ppm
         IAQ, // air quality, integer, 0..500 no unit
-        ENV_TEMP, // environment temperature, floating point, in degrees C
+        TEMPERATURE, // environment temperature, floating point, in degrees C
         MOVE_TIME, // time since last movement, integer, in minutes
         MOVE_COUNT, // total number of movement, integer, no unit
 
@@ -105,12 +106,12 @@ public final class BrowanMessage {
         int status = parseStatus(bb.get());
         double battery = parseVoltage(bb.get());
         double temperature = parseTemperature(bb.get());
-        double rh = parseHumidity(bb.get());
+        int humidity = parseHumidity(bb.get());
 
         items.put(EBrowanItem.STATUS, status);
         items.put(EBrowanItem.BATTERY, battery);
-        items.put(EBrowanItem.ENV_TEMP, temperature);
-        items.put(EBrowanItem.HUMIDITY, rh);
+        items.put(EBrowanItem.TEMPERATURE, temperature);
+        items.put(EBrowanItem.HUMIDITY, humidity);
 
         return true;
     }
@@ -120,7 +121,7 @@ public final class BrowanMessage {
         int status = parseStatus(bb.get());
         double battery = parseVoltage(bb.get());
         double pcbTemp = parseTemperature(bb.get());
-        double rh = parseHumidity(bb.get());
+        int humidity = parseHumidity(bb.get());
         int eco2 = bb.getShort() & 0xFFFF;
         int voc = bb.getShort() & 0xFFFF;
         int iaq = bb.getShort() & 0xFFFF;
@@ -129,11 +130,11 @@ public final class BrowanMessage {
         items.put(EBrowanItem.STATUS, status);
         items.put(EBrowanItem.BATTERY, battery);
         items.put(EBrowanItem.PCB_TEMP, pcbTemp);
-        items.put(EBrowanItem.HUMIDITY, rh);
+        items.put(EBrowanItem.HUMIDITY, humidity);
         items.put(EBrowanItem.ECO2, eco2);
         items.put(EBrowanItem.VOC, voc);
         items.put(EBrowanItem.IAQ, iaq);
-        items.put(EBrowanItem.ENV_TEMP, envTemp);
+        items.put(EBrowanItem.TEMPERATURE, envTemp);
 
         return true;
     }
@@ -171,7 +172,7 @@ public final class BrowanMessage {
         return (b & 0x7F) - 32.0;
     }
 
-    private double parseHumidity(byte b) {
+    private int parseHumidity(byte b) {
         return (b & 0x7F);
     }
 

@@ -66,7 +66,7 @@ public final class LoraWanUplink {
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "id %s, port %d, SF %d", deviceId, port, sf);
+        return String.format(Locale.ROOT, "id %s, port %d, SF %d, %d bytes", deviceId, port, sf, frmPayload.length);
     }
 
 }
