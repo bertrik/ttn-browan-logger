@@ -1,0 +1,22 @@
+# copy this to /etc/systemd/system
+# then sudo systemctl daemon-reload
+# and enable with sudo systemctl enable --now ttn-browan-logger
+
+[Unit]
+Description=ttn-browan-logger
+After=network.target
+
+[Service]
+WorkingDirectory=/home/bertrik/ttn-browan-logger
+ExecStart=/home/bertrik/ttn-browan-logger/bin/ttn-browan-logger
+Type=simple
+KillMode=process
+Restart=on-failure
+RestartSec=10s
+TimeoutStopSec=15s
+User=bertrik
+Environment="TTN_BROWAN_LOGGER_OPTS=-Xmx64M"
+
+[Install]
+WantedBy=multi-user.target
+
