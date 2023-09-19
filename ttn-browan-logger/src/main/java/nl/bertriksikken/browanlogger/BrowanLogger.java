@@ -2,7 +2,6 @@ package nl.bertriksikken.browanlogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.Objects;
 
 import org.apache.log4j.PropertyConfigurator;
@@ -14,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import nl.bertriksikken.browan.BrowanMessage;
-import nl.bertriksikken.browanlogger.export.BrowanCsvExporter;
+import nl.bertriksikken.browanlogger.export.BrowanExporter;
 import nl.bertriksikken.ttn.LoraWanUplink;
 import nl.bertriksikken.ttn.MqttListener;
 
@@ -25,7 +24,7 @@ public final class BrowanLogger {
 
     private final BrowanLoggerConfig config;
     private final MqttListener mqttListener;
-    private final BrowanCsvExporter exporter;
+    private final BrowanExporter exporter;
 
     public static void main(String[] args) throws IOException, MqttException {
         PropertyConfigurator.configure("log4j.properties");
@@ -38,7 +37,7 @@ public final class BrowanLogger {
     BrowanLogger(BrowanLoggerConfig config) {
         this.config = Objects.requireNonNull(config);
         this.mqttListener = new MqttListener(config.ttnConfig.getMqttUrl());
-        this.exporter = new BrowanCsvExporter(ZoneId.of("Europe/Amsterdam"));
+        this.exporter = new BrowanExporter(config.exportConfig, config.ttnConfig.getName());
     }
 
     private void start() throws MqttException {

@@ -2,7 +2,6 @@ package nl.bertriksikken.browanlogger.export;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.ZoneId;
 
 import org.junit.Test;
 
@@ -17,7 +16,8 @@ public final class BrowanExporterTest {
         message.parsePayload(103,
                 new byte[] { 0x41, 0x0b, 0x36, 0x49, (byte) 0x96, 0x04, 0x02, 0x00, (byte) 0xec, 0x00, 0x35 });
 
-        BrowanCsvExporter exporter = new BrowanCsvExporter(ZoneId.of("Europe/Amsterdam"));
+        BrowanExportConfig config = new BrowanExportConfig();
+        BrowanExporter exporter = new BrowanExporter(config, "sensors");
         exporter.write(message);
     }
 }
