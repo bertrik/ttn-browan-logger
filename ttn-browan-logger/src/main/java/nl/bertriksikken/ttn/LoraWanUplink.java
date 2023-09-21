@@ -66,7 +66,11 @@ public final class LoraWanUplink {
 
     @Override
     public String toString() {
-        return String.format(Locale.ROOT, "id %s, port %d, SF %d, %d bytes", deviceId, port, sf, frmPayload.length);
+        StringBuilder payloadHex = new StringBuilder();
+        for (byte b : frmPayload) {
+            payloadHex.append(String.format(Locale.ROOT, "%02X", b));
+        }
+        return String.format(Locale.ROOT, "id %s, port %d, SF %d, payload %s", deviceId, port, sf, payloadHex);
     }
 
 }
