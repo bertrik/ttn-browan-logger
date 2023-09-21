@@ -10,5 +10,5 @@ public final class BrowanLoggerTest {
         BrowanLogger logger = new BrowanLogger(config);
         logger.stop();
     }
-    
+
 }
