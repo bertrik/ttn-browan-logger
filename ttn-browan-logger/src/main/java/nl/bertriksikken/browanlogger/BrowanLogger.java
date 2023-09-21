@@ -40,11 +40,11 @@ public final class BrowanLogger {
         this.exporter = new BrowanExporter(config.exportConfig, config.ttnConfig.getName());
     }
 
-    private void start() throws MqttException {
+    void start() throws MqttException {
         mqttListener.subscribe(config.ttnConfig.getName(), config.ttnConfig.getKey(), this::messageReceived);
     }
 
-    private void stop() {
+    void stop() {
         mqttListener.stop();
         LOG.info("Application stopped");
     }
