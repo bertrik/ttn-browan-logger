@@ -5,3 +5,8 @@ ttn:
   identity_server_timeout: 20
   name: "hetnatuurhistorischsensors"
   key: "NNSXS.UGRPVV5GCUKCTVBQKX3N4IA3IIGXTZG7KVQU6JI.secret"
+export:
+  timezone: "Europe/Amsterdam"
+  locale: "nl"
+  folder: "data"
+
