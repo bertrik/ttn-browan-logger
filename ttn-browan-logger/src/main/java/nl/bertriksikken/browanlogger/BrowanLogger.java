@@ -9,8 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 
 import nl.bertriksikken.browan.BrowanMessage;
 import nl.bertriksikken.browanlogger.export.BrowanExporter;
@@ -21,17 +20,18 @@ public final class BrowanLogger {
 
     private static final Logger LOG = LoggerFactory.getLogger(BrowanLogger.class);
     private static final String CONFIG_FILE = "ttn-browan-logger.yaml";
+    private static final String LOG4J_FILE = "log4j.properties";
 
     private final BrowanLoggerConfig config;
     private final MqttListener mqttListener;
     private final BrowanExporter exporter;
 
     public static void main(String[] args) throws IOException, MqttException {
-        PropertyConfigurator.configure("log4j.properties");
+        PropertyConfigurator.configure(LOG4J_FILE);
         BrowanLoggerConfig config = readConfig(new File(CONFIG_FILE));
         BrowanLogger app = new BrowanLogger(config);
-        app.start();
         Runtime.getRuntime().addShutdownHook(new Thread(app::stop));
+        app.start();
     }
 
     BrowanLogger(BrowanLoggerConfig config) {
@@ -41,12 +41,13 @@ public final class BrowanLogger {
     }
 
     void start() throws MqttException {
+        LOG.info("BrowanLogger starting");
         mqttListener.subscribe(config.ttnConfig.getName(), config.ttnConfig.getKey(), this::messageReceived);
     }
 
     void stop() {
         mqttListener.stop();
-        LOG.info("Application stopped");
+        LOG.info("BrowanLogger stopped");
     }
 
     // package-private for testing
@@ -65,7 +66,7 @@ public final class BrowanLogger {
     }
 
     private static BrowanLoggerConfig readConfig(File file) throws IOException {
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        YAMLMapper mapper = new YAMLMapper();
         BrowanLoggerConfig config = new BrowanLoggerConfig();
         if (file.exists()) {
             try {

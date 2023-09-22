@@ -38,6 +38,8 @@ public final class MqttListener {
     }
 
     public void subscribe(String appId, String appKey, IMessageReceived callback) throws MqttException {
+        LOG.info("Connecting to MQTT for '{}'", appId);
+
         MqttClient client = new MqttClient(url, MqttClient.generateClientId(), new MemoryPersistence());
         client.setCallback(new MqttCallbackHandler(client, "v3/+/devices/+/up", callback));
 
@@ -78,9 +80,9 @@ public final class MqttListener {
         private final IMessageReceived listener;
 
         private MqttCallbackHandler(MqttClient client, String topic, IMessageReceived listener) {
-            this.client = client;
-            this.topic = topic;
-            this.listener = listener;
+            this.client = Objects.requireNonNull(client);
+            this.topic = Objects.requireNonNull(topic);
+            this.listener = Objects.requireNonNull(listener);
         }
 
         @Override
@@ -112,7 +114,7 @@ public final class MqttListener {
 
         @Override
         public void connectComplete(boolean reconnect, String serverURI) {
-            LOG.info("Connected to '{}', subscribing to MQTT topic '{}'", serverURI, topic);
+            LOG.info("Connected, subscribing to MQTT topic '{}'", topic);
             try {
                 client.subscribe(topic);
             } catch (MqttException e) {

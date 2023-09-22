@@ -33,7 +33,7 @@ public final class BrowanExporter {
 
     public BrowanExporter(BrowanExportConfig config, String appId) {
         this.config = Objects.requireNonNull(config);
-        this.appId = appId;
+        this.appId = Objects.requireNonNull(appId);
 
         dateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(config.getTimeZone());
     }
