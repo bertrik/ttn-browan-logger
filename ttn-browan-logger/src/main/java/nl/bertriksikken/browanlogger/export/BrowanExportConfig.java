@@ -15,7 +15,7 @@ public final class BrowanExportConfig {
     private String timeZone = "Europe/Amsterdam";
 
     @JsonProperty("locale")
-    private String locale = "nl";
+    private String locale = "nl-NL";
 
     @JsonProperty("folder")
     private String exportFolder = "data";
@@ -25,7 +25,7 @@ public final class BrowanExportConfig {
     }
 
     public Locale getLocale() {
-        return new Locale(locale);
+        return Locale.forLanguageTag(locale);
     }
 
     public File getExportFolder() {

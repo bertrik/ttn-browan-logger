@@ -7,6 +7,6 @@ ttn:
   key: "NNSXS.UGRPVV5GCUKCTVBQKX3N4IA3IIGXTZG7KVQU6JI.secret"
 export:
   timezone: "Europe/Amsterdam"
-  locale: "nl"
+  locale: "nl-NL"
   folder: "data"
 
