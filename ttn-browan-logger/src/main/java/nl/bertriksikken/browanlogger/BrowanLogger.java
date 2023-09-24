@@ -25,6 +25,7 @@ public final class BrowanLogger {
     private final BrowanLoggerConfig config;
     private final MqttListener mqttListener;
     private final BrowanExporter exporter;
+    private final DeviceNameRegistry nameRegistry;
 
     public static void main(String[] args) throws IOException, MqttException {
         PropertyConfigurator.configure(LOG4J_FILE);
@@ -38,22 +39,27 @@ public final class BrowanLogger {
         this.config = Objects.requireNonNull(config);
         this.mqttListener = new MqttListener(config.ttnConfig.getMqttUrl());
         this.exporter = new BrowanExporter(config.exportConfig, config.ttnConfig.getName());
+        this.nameRegistry = new DeviceNameRegistry(config.ttnConfig.getIdentityServerUrl(),
+                config.ttnConfig.getIdentityServerTimeout(), config.ttnConfig.getName(), config.ttnConfig.getKey());
     }
 
     void start() throws MqttException {
         LOG.info("BrowanLogger starting");
+        nameRegistry.start();
         mqttListener.subscribe(config.ttnConfig.getName(), config.ttnConfig.getKey(), this::messageReceived);
     }
 
     void stop() {
         mqttListener.stop();
+        nameRegistry.stop();
         LOG.info("BrowanLogger stopped");
     }
 
     // package-private for testing
     void messageReceived(LoraWanUplink uplink) {
         LOG.info("Received uplink: {}", uplink);
-        BrowanMessage message = new BrowanMessage(uplink.getTime(), uplink.getDeviceId(), uplink.getCounter(), "");
+        String name = nameRegistry.getDeviceName(uplink.getDeviceId());
+        BrowanMessage message = new BrowanMessage(uplink.getTime(), uplink.getDeviceId(), uplink.getCounter(), name);
         message.setRadio(uplink.getSF(), uplink.getSNR(), uplink.getRSSI());
         if (message.parsePayload(uplink.getPort(), uplink.getFrmPayload())) {
             LOG.info("Parsed message: {}", message);
