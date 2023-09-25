@@ -41,7 +41,8 @@ final class DeviceNameRegistry {
             executor.shutdownNow();
             executor.awaitTermination(3, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            LOG.warn("Failed to stop executor");
+            LOG.warn("Failed to stop executor", e);
+            Thread.currentThread().interrupt();
         }
         LOG.info("Stopped TTN device name registry");
     }

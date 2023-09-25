@@ -53,7 +53,7 @@ public final class EndDeviceClient {
         String fieldMask = String.join(",", fields);
         Response<EndDevice> response = restApi.getEndDevice(authToken, applicationId, deviceId, fieldMask).execute();
         if (!response.isSuccessful()) {
-            LOG.warn("Request failed: {} - {}", response.message(), response.errorBody().string());
+            LOG.warn("getEndDevice failed: {} - {}", response.message(), response.errorBody().string());
         }
         return response.body();
     }
@@ -62,7 +62,7 @@ public final class EndDeviceClient {
         String fieldMask = String.join(",", fields);
         Response<EndDevice> response = restApi.getNsEndDevice(authToken, applicationId, deviceId, fieldMask).execute();
         if (!response.isSuccessful()) {
-            LOG.warn("Request failed: {} - {}", response.message(), response.errorBody().string());
+            LOG.warn("getNsEndDevice failed: {} - {}", response.message(), response.errorBody().string());
         }
         return response.body();
     }
@@ -71,7 +71,7 @@ public final class EndDeviceClient {
         String fieldMask = String.join(",", fields);
         Response<EndDevices> response = restApi.listEndDevices(authToken, applicationId, fieldMask).execute();
         if (!response.isSuccessful()) {
-            LOG.warn("Request failed: {} - {}", response.message(), response.errorBody().string());
+            LOG.warn("listEndDevices failed: {} - {}", response.message(), response.errorBody().string());
             return Collections.emptyList();
         }
         EndDevices endDevices = response.body();
@@ -85,7 +85,7 @@ public final class EndDeviceClient {
                 .updateEndDevice(authToken, applicationId, endDevice.getIds().getDeviceId(), updateEndDeviceRequest)
                 .execute();
         if (!response.isSuccessful()) {
-            LOG.warn("Request failed: {} - {}", response.message(), response.errorBody().string());
+            LOG.warn("updateEndDevice failed: {} - {}", response.message(), response.errorBody().string());
         }
         return response.body();
     }
