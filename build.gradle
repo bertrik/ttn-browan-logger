@@ -3,6 +3,7 @@ plugins {
     alias libs.plugins.dependencycheck
     alias libs.plugins.versions
     alias libs.plugins.version.catalog.update
+    alias libs.plugins.sonarqube
 }
 
 def isNonStable = { String version ->
@@ -20,6 +21,7 @@ subprojects {
     apply plugin: "eclipse"
     apply plugin: "com.github.spotbugs"
     apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: "org.sonarqube"
     
     java {
         targetCompatibility = JavaVersion.VERSION_11

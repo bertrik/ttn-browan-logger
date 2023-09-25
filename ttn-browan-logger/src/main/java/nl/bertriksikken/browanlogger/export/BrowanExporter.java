@@ -69,8 +69,7 @@ public final class BrowanExporter {
         if (!folder.exists() && !folder.mkdirs()) {
             LOG.warn("Could not create folder: {}", folder.getAbsolutePath());
         }
-        File file = new File(config.getExportFolder(), fileName);
-        return file;
+        return new File(config.getExportFolder(), fileName);
     }
 
     public void write(BrowanMessage message) throws IOException {

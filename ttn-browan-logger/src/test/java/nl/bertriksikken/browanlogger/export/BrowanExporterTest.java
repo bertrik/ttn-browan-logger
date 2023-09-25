@@ -3,6 +3,7 @@ package nl.bertriksikken.browanlogger.export;
 import java.io.IOException;
 import java.time.Instant;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import nl.bertriksikken.browan.BrowanMessage;
@@ -10,7 +11,7 @@ import nl.bertriksikken.browan.BrowanMessage;
 public final class BrowanExporterTest {
 
     @Test
-    public void test() throws IOException {
+    public void testHappyFlow() throws IOException {
         BrowanMessage message = new BrowanMessage(Instant.now(), "device-id", 123, "device-name");
         message.setRadio(7, 10.0, -100.0);
         message.parsePayload(103,
@@ -19,5 +20,7 @@ public final class BrowanExporterTest {
         BrowanExportConfig config = new BrowanExportConfig();
         BrowanExporter exporter = new BrowanExporter(config, "sensors");
         exporter.write(message);
+
+        Assert.assertTrue(config.getExportFolder().list().length > 0);
     }
 }

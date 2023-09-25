@@ -147,15 +147,15 @@ public final class BrowanMessage {
         int status = parseStatus(bb.get());
         double battery = parseVoltage(bb.get());
         double temp = parseTemperature(bb.get());
-        int time = bb.getShort() & 0xFFFF;
-        int count = bb.getShort() & 0xFFFF;
-        count += (bb.get() & 0xFF) << 16;
+        int moveTime = bb.getShort() & 0xFFFF;
+        int moveCount = bb.getShort() & 0xFFFF;
+        moveCount += (bb.get() & 0xFF) << 16;
 
         items.put(EBrowanItem.STATUS, status);
         items.put(EBrowanItem.BATTERY, battery);
         items.put(EBrowanItem.PCB_TEMP, temp);
-        items.put(EBrowanItem.MOVE_TIME, time);
-        items.put(EBrowanItem.MOVE_COUNT, count);
+        items.put(EBrowanItem.MOVE_TIME, moveTime);
+        items.put(EBrowanItem.MOVE_COUNT, moveCount);
         return true;
     }
 

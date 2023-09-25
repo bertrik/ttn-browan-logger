@@ -114,15 +114,15 @@ public final class EndDevice {
     public static final class EndDevices {
 
         @JsonProperty("end_devices")
-        private final List<EndDevice> endDevices = new ArrayList<>();
+        private final List<EndDevice> devices = new ArrayList<>();
 
         public List<EndDevice> getEndDevices() {
-            return List.copyOf(endDevices);
+            return List.copyOf(devices);
         }
 
         @Override
         public String toString() {
-            return String.format(Locale.ROOT, "%s", endDevices);
+            return String.format(Locale.ROOT, "%s", devices);
         }
 
     }
