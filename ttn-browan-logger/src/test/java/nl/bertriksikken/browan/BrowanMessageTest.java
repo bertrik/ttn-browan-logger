@@ -85,14 +85,19 @@ public final class BrowanMessageTest {
     }
 
     @Test
-    public void test() {
+    public void testExtremeValues() {
         BrowanMessage message = new BrowanMessage(Instant.now(), "id", 0, "name");
-        byte[] data = { 0x08, 0x0b, 0x39, 0x3a, (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff };
+        byte[] data = { 0x41, 0x0B, 0x35, 0x4B, 0x14, 0x30, (byte) 0xE8, 0x03, (byte) 0xF4, 0x01, 0x34 };
         message.parsePayload(103, data);
 
-        Assert.assertNotNull(message.getItem(EBrowanItem.STATUS));
+        Assert.assertEquals(65, message.getItem(EBrowanItem.STATUS));
         Assert.assertEquals(3.6, message.getItem(EBrowanItem.BATTERY).doubleValue(), 0.01);
-        Assert.assertEquals(25.0, message.getItem(EBrowanItem.TEMPERATURE).doubleValue(), 0.01);
-        Assert.assertEquals(58, message.getItem(EBrowanItem.HUMIDITY).doubleValue(), 0.1);
+        Assert.assertEquals(21.0, message.getItem(EBrowanItem.PCB_TEMP).doubleValue(), 0.01);
+        Assert.assertEquals(75, message.getItem(EBrowanItem.HUMIDITY).doubleValue(), 0.1);
+        Assert.assertEquals(12308, message.getItem(EBrowanItem.ECO2).intValue(), 0.1);
+        Assert.assertEquals(1000, message.getItem(EBrowanItem.VOC).intValue());
+        Assert.assertEquals(500, message.getItem(EBrowanItem.IAQ).intValue());
+        Assert.assertEquals(20.0, message.getItem(EBrowanItem.TEMPERATURE).doubleValue(), 0.1);
+
     }
 }
