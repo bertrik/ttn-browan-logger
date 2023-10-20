@@ -85,6 +85,18 @@ public final class BrowanMessageTest {
     }
 
     @Test
+    public void testTbsl() {
+        BrowanMessage message = new BrowanMessage(Instant.now(), "id", 0, "name");
+        byte[] data = { 0x00, 0x0B, 0x35, 0x50 };
+        Assert.assertTrue(message.parsePayload(105, data));
+
+        Assert.assertNotNull(message.getItem(EBrowanItem.STATUS));
+        Assert.assertEquals(3.6, message.getItem(EBrowanItem.BATTERY).doubleValue(), 0.01);
+        Assert.assertEquals(21.0, message.getItem(EBrowanItem.PCB_TEMP).doubleValue(), 0.1);
+        Assert.assertEquals(80, message.getItem(EBrowanItem.SOUND_LEVEL).doubleValue(), 0.1);
+    }
+
+    @Test
     public void testExtremeValues() {
         BrowanMessage message = new BrowanMessage(Instant.now(), "id", 0, "name");
         byte[] data = { 0x41, 0x0B, 0x35, 0x4B, 0x14, 0x30, (byte) 0xE8, 0x03, (byte) 0xF4, 0x01, 0x34 };

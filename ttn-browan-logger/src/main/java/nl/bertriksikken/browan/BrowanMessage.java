@@ -29,6 +29,7 @@ public final class BrowanMessage {
         TEMPERATURE, // environment temperature, floating point, in degrees C
         MOVE_TIME, // time since last movement, integer, in minutes
         MOVE_COUNT, // total number of movement, integer, no unit
+        SOUND_LEVEL, // sound level, floating point, in dB
 
         RADIO_SF, // spreading factor, integer, 7..12 no unit
         RADIO_SNR, // signal-to-noise ratio, double, in dB
@@ -63,7 +64,7 @@ public final class BrowanMessage {
     public String getDeviceId() {
         return deviceId;
     }
-    
+
     public int getSequenceNumber() {
         return sequenceNumber;
     }
@@ -98,6 +99,8 @@ public final class BrowanMessage {
                 break;
             }
             break;
+        case 105:
+            return parseTbsl100(data);
         default:
             LOG.warn("Payload was not parsed, unhandled port {}", port);
             break;
@@ -161,6 +164,25 @@ public final class BrowanMessage {
         items.put(EBrowanItem.PCB_TEMP, temp);
         items.put(EBrowanItem.MOVE_TIME, moveTime);
         items.put(EBrowanItem.MOVE_COUNT, moveCount);
+        return true;
+    }
+
+    private boolean parseTbsl100(byte[] data) {
+        if (data.length < 4) {
+            LOG.warn("Expected at least 8 bytes for TBSL, got {}", data.length);
+            return false;
+        }
+        ByteBuffer bb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
+        int status = parseStatus(bb.get());
+        double battery = parseVoltage(bb.get());
+        double temp = parseTemperature(bb.get());
+        double db = bb.get() & 0xFF;
+        items.put(EBrowanItem.STATUS, status);
+        items.put(EBrowanItem.BATTERY, battery);
+        items.put(EBrowanItem.PCB_TEMP, temp);
+        if (db != 255) {
+            items.put(EBrowanItem.SOUND_LEVEL, db);
+        }
         return true;
     }
 
