@@ -79,6 +79,11 @@ public final class BrowanMessage {
     }
 
     public boolean parsePayload(int port, byte[] data) {
+        // just drop empty packets
+        if (data.length == 0) {
+            return false;
+        }
+
         switch (port) {
         case 102:
             return parseTbms100(data);
@@ -140,7 +145,7 @@ public final class BrowanMessage {
 
     private boolean parseTbms100(byte[] data) {
         if (data.length < 8) {
-            LOG.warn("Expected at least 8 bytes for TBMS");
+            LOG.warn("Expected at least 8 bytes for TBMS, got {}", data.length);
             return false;
         }
         ByteBuffer bb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN);
