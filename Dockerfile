@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk14:jre-14.0.2_12-alpine
+FROM eclipse-temurin:11.0.21_9-jre-alpine
 LABEL maintainer="Bertrik Sikken bertrik@gmail.com"
 
 ADD ttn-browan-logger/build/distributions/ttn-browan-logger.tar /opt/
