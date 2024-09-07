@@ -31,19 +31,14 @@ final class DeviceNameRegistry {
         client = EndDeviceClient.create(url, timeout, appName, appKey);
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
     public void start() {
         LOG.info("Starting TTN device name registry");
         executor.scheduleAtFixedRate(this::fetchDeviceNames, 0, 60, TimeUnit.MINUTES);
     }
 
     public void stop() {
-        try {
-            executor.shutdownNow();
-            executor.awaitTermination(3, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            LOG.warn("Failed to stop executor", e);
-            Thread.currentThread().interrupt();
-        }
+        executor.shutdownNow();
         LOG.info("Stopped TTN device name registry");
     }
 

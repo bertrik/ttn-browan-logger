@@ -2,11 +2,12 @@ package nl.bertriksikken.ttn.enddevice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * https://www.thethingsindustries.com/docs/reference/api/end_device/#message:UpdateEndDeviceRequest
+ * <a href="https://www.thethingsindustries.com/docs/reference/api/end_device/#message:UpdateEndDeviceRequest">UpdateEndDeviceRequest</a>
  */
 public final class UpdateEndDeviceRequest {
 
@@ -21,10 +22,15 @@ public final class UpdateEndDeviceRequest {
         this.fieldMask = fieldMask;
     }
 
+    @Override
+    public String toString() {
+        return String.format(Locale.ROOT, "{device=%s,mask=%s}", endDevice, fieldMask);
+    }
+
     /**
      * Field mask structure.<br>
      * <br>
-     * https://www.thethingsindustries.com/docs/reference/api/field-mask/
+     * <a href="https://www.thethingsindustries.com/docs/reference/api/field-mask/">field-mask</a>
      */
     public static final class FieldMask {
         @JsonProperty("paths")
@@ -32,6 +38,11 @@ public final class UpdateEndDeviceRequest {
 
         FieldMask(List<String> fields) {
             paths.addAll(fields);
+        }
+
+        @Override
+        public String toString() {
+            return String.format(Locale.ROOT, "{paths=%s}", paths);
         }
 
     }
