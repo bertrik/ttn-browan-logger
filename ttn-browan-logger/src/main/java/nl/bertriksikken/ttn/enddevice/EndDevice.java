@@ -1,14 +1,13 @@
 package nl.bertriksikken.ttn.enddevice;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Representation of<br>
@@ -111,19 +110,9 @@ public final class EndDevice {
         }
     }
 
-    public static final class EndDevices {
-
-        @JsonProperty("end_devices")
-        private final List<EndDevice> devices = new ArrayList<>();
-
-        public List<EndDevice> getEndDevices() {
-            return List.copyOf(devices);
+    public record EndDevices(@JsonProperty("end_devices") List<EndDevice> devices) {
+        public EndDevices {
+            devices = List.copyOf(devices);
         }
-
-        @Override
-        public String toString() {
-            return String.format(Locale.ROOT, "%s", devices);
-        }
-
     }
 }

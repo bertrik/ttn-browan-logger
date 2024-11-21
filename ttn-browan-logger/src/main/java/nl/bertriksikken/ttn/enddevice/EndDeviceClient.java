@@ -35,10 +35,6 @@ public final class EndDeviceClient {
         this.authToken = "Bearer " + apiKey;
     }
 
-    public EndDevice buildEndDevice(String deviceId) {
-        return new EndDevice(applicationId, deviceId);
-    }
-
     public static EndDeviceClient create(String url, Duration timeout, String applicationId, String key) {
         LOG.info("Creating new REST client for '{}' with timeout {}", url, timeout);
         OkHttpClient client = new OkHttpClient().newBuilder().connectTimeout(timeout).readTimeout(timeout)
@@ -75,7 +71,7 @@ public final class EndDeviceClient {
             return Collections.emptyList();
         }
         EndDevices endDevices = response.body();
-        return endDevices.getEndDevices();
+        return endDevices.devices();
     }
 
     public EndDevice updateEndDevice(EndDevice endDevice, List<String> fields) throws IOException {
