@@ -1,10 +1,9 @@
 package nl.bertriksikken.browanlogger;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public final class BrowanLoggerConfigTest {
 
@@ -13,6 +12,6 @@ public final class BrowanLoggerConfigTest {
         YAMLMapper mapper = new YAMLMapper();
         BrowanLoggerConfig config = new BrowanLoggerConfig();
         String yaml = mapper.writeValueAsString(config);
-        Assert.assertNotNull(yaml);
+        Assertions.assertNotNull(yaml);
     }
 }

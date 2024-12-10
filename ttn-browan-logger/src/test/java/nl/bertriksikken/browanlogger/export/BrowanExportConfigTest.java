@@ -1,10 +1,10 @@
 package nl.bertriksikken.browanlogger.export;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.time.DayOfWeek;
 import java.time.temporal.WeekFields;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public final class BrowanExportConfigTest {
 
@@ -15,7 +15,7 @@ public final class BrowanExportConfigTest {
     public void testFirstDayOfWeek() {
         BrowanExportConfig config = new BrowanExportConfig();
         DayOfWeek firstDayOfWeek = WeekFields.of(config.getLocale()).getFirstDayOfWeek();
-        Assert.assertEquals(DayOfWeek.MONDAY, firstDayOfWeek);
+        Assertions.assertEquals(DayOfWeek.MONDAY, firstDayOfWeek);
     }
 
 }

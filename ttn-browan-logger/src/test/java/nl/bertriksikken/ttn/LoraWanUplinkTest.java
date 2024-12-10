@@ -1,9 +1,9 @@
 package nl.bertriksikken.ttn;
 
-import java.time.Instant;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.time.Instant;
 
 public final class LoraWanUplinkTest {
 
@@ -11,7 +11,7 @@ public final class LoraWanUplinkTest {
     public void testToString() {
         LoraWanUplink uplink = new LoraWanUplink(Instant.now(), "id", 1, 100, new byte[] {1, 2, 3, 4});
         String s = uplink.toString();
-        Assert.assertEquals("id id, port 100, SF 0, payload 01020304", s);
+        Assertions.assertEquals("id id, port 100, SF 0, payload 01020304", s);
     }
     
 }
