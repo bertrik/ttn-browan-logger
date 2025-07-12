@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import nl.bertriksikken.dragino.DraginoMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +87,8 @@ public final class BrowanMessage {
         }
 
         switch (port) {
+        case 2:
+            return parseDraginoLAQ4(data);
         case 102:
             return parseTbms100(data);
         case 103:
@@ -182,6 +185,25 @@ public final class BrowanMessage {
         items.put(EBrowanItem.PCB_TEMP, temp);
         if (db != 255) {
             items.put(EBrowanItem.SOUND_LEVEL, db);
+        }
+        return true;
+    }
+
+    private boolean parseDraginoLAQ4(byte[] data) {
+        DraginoMessage message = DraginoMessage.parse(data);
+        if (message == null) {
+            LOG.warn("Could not parse Dragino LAQ4 message");
+            return false;
+        }
+        items.put(EBrowanItem.BATTERY, message.battery());
+        items.put(EBrowanItem.STATUS, message.alarm());
+        items.put(EBrowanItem.VOC, message.tvoc());
+        items.put(EBrowanItem.ECO2, message.eco2());
+        if (Double.isFinite(message.temp())) {
+            items.put(EBrowanItem.TEMPERATURE, message.temp());
+        }
+        if (Double.isFinite(message.humidity())) {
+            items.put(EBrowanItem.HUMIDITY, message.humidity());
         }
         return true;
     }
