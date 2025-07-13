@@ -3,6 +3,7 @@ package nl.bertriksikken.dragino;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DraginoMessageTest {
@@ -18,19 +19,19 @@ public class DraginoMessageTest {
     @Test
     public void testDecode() {
         byte[] data = new byte[]{0x0E, 0x28, 0x00, (byte) 0xF6, 0x02, 0x03, 0x27, (byte) 0xC5, 0x04, 0x19, 0x00};
-        DraginoMessage message = DraginoMessage.parse(data);
-        assertEquals(3.624, message.battery());
+        DraginoMessage message = DraginoMessage.parseAqs01(data);
+        assertNotNull(message);
+        assertEquals(3.624, message.battery(), 0.001);
+        assertEquals(24.6, message.temperature(), 0.1);
+        assertEquals(51.5, message.humidity(), 0.1);
+        assertEquals(1049, message.co2());
         assertEquals(0, message.alarm());
-        assertEquals(62978, message.tvoc());
-        assertEquals(807, message.eco2());
-        assertEquals(Double.NaN, message.temp());
-        assertEquals(Double.NaN, message.humidity());
     }
 
     @Test
     public void testTooShort() {
         byte[] data = new byte[3];
-        DraginoMessage message = DraginoMessage.parse(data);
+        DraginoMessage message = DraginoMessage.parseAqs01(data);
         assertNull(message);
     }
 
