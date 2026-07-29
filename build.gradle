@@ -3,15 +3,9 @@ plugins {
     alias libs.plugins.versions
 }
 
-def isNonStable = { String version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { it -> version.toUpperCase().contains(it) }
-    def regex = /^[0-9,.v-]+(-r)?$/
-    return !stableKeyword && !(version ==~ regex)
-}
-
 subprojects {
     apply plugin: "java"
-    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'io.github.ben-manes.versions'
     apply plugin: 'net.ltgt.errorprone'
 
     java {
