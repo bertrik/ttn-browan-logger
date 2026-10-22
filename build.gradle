@@ -40,14 +40,14 @@ subprojects {
 
     // Standard libraries added to all projects
     dependencies {
-        errorprone(libs.errorprone.core)
-        compileOnly libs.errorprone.annotations
+        errorprone(rootProject.libs.errorprone.core)
+        compileOnly rootProject.libs.errorprone.annotations
 
-        implementation libs.slf4j
+        implementation rootProject.libs.slf4j
 
-        testImplementation(platform(libs.junit.bom))
-        testImplementation libs.junit.jupiter
-        testRuntimeOnly libs.junit.platform.launcher
+        testImplementation(platform(rootProject.libs.junit.bom))
+        testImplementation rootProject.libs.junit.jupiter
+        testRuntimeOnly rootProject.libs.junit.platform.launcher
     }
 }
 
